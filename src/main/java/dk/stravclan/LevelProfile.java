@@ -1,7 +1,10 @@
 package dk.stravclan;
 
-import net.minecraft.server.MinecraftServer;
+import net.minecraft.entity.effect.StatusEffect;
+import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.network.ServerPlayerEntity;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,6 +19,22 @@ public class LevelProfile {
     public LevelProfile(ServerPlayerEntity player){
         Skill combatSkill = new CombatSkill();
         skillLevels.put(combatSkill, combatSkill.level(player));
+        Skill swimmingSkill = new SwimmingSkill();
+        skillLevels.put(swimmingSkill, swimmingSkill.level(player));
+        Skill runningSkill = new RunningSkill();
+        skillLevels.put(runningSkill, runningSkill.level(player));
+        Skill walkingSkill = new WalkingSkill();
+        skillLevels.put(walkingSkill, walkingSkill.level(player));
+        Skill miningSkill = new MiningSkill();
+        skillLevels.put(miningSkill, miningSkill.level(player));
+        Skill jumpingSkill = new JumpingSkill();
+        skillLevels.put(jumpingSkill, jumpingSkill.level(player));
+        Skill naturesGraceSkill = new NaturesGraceSkill();
+        skillLevels.put(naturesGraceSkill, naturesGraceSkill.level(player));
+        Skill toughnessSkill = new ToughnessSkill();
+        skillLevels.put(toughnessSkill, toughnessSkill.level(player));
+
+
         updateAllSkills(player);
     }
 
@@ -25,6 +44,28 @@ public class LevelProfile {
             LOGGER.info("Player has level {} in {}", skillLevels.get(skill), skill.name);
         }
 
+    }
+
+    public void updateAllEffects(ServerPlayerEntity player) {
+        for (Skill skill : skillLevels.keySet()) {
+            updateEffect(player, skill);
+        }
+    }
+
+    private void updateEffect(@NotNull ServerPlayerEntity player, Skill skill) {
+        int amplifier = skillLevels.get(skill);
+        if (amplifier < 1) {
+            return;
+        }
+        amplifier -= 1; // 0 based
+        RegistryEntry<StatusEffect> effect = Constants.skillEffects.get(skill.name);
+        StatusEffectInstance effectInstance = new StatusEffectInstance(effect, -1, amplifier); // -1 duration means infinite
+        try {
+            player.addStatusEffect(effectInstance, player);
+        } catch (Exception e) {
+            LOGGER.error("Failed to add effect {} to player {}", effect, player.getName().getString());
+            LOGGER.error(e.getMessage());
+        }
     }
 
 }

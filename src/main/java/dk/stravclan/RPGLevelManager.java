@@ -1,5 +1,6 @@
 package dk.stravclan;
 
+import io.netty.util.IntSupplier;
 import net.minecraft.server.network.ServerPlayerEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,30 +10,36 @@ import java.util.Map;
 
 public class RPGLevelManager {
     public static final Logger LOGGER = LoggerFactory.getLogger("rpg-style-leveling");
-    private final Map<ServerPlayerEntity, LevelProfile> playerManager = new HashMap<ServerPlayerEntity, LevelProfile>();
-
+    private final Map<ServerPlayerEntity, LevelProfile> playerLevelManager = new HashMap<>();
 
 
     public RPGLevelManager(){}
 
     public void addPlayer(ServerPlayerEntity player){
-        playerManager.put(player, new LevelProfile(player));
+        playerLevelManager.put(player, new LevelProfile(player));
 
     }
 
     public void removePlayer(ServerPlayerEntity player){
-        playerManager.remove(player);
+        playerLevelManager.remove(player);
     }
 
-    public void updatePlayer(ServerPlayerEntity player){
-        playerManager.get(player).updateAllSkills(player);
+    private void updatePlayerEffects(ServerPlayerEntity player) {
+        playerLevelManager.get(player).updateAllEffects(player);
+    }
+
+    public void updatePlayerLevel(ServerPlayerEntity player){
+        playerLevelManager.get(player).updateAllSkills(player);
     }
 
     public void updatePlayers(){
-        for (ServerPlayerEntity player : playerManager.keySet()) {
-            updatePlayer(player);
+        for (ServerPlayerEntity player : playerLevelManager.keySet()) {
+            updatePlayerLevel(player);
+            updatePlayerEffects(player);
             LOGGER.info("Updated player {}", player.getName().getString());
         }
     }
+
+
 
 }
