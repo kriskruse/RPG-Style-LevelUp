@@ -40,10 +40,6 @@ public class LevelProfile {
 
     public void updateAllSkills(ServerPlayerEntity player){
         skillLevels.replaceAll((s, v) -> s.level(player));
-        for (Skill skill : skillLevels.keySet()) {
-            LOGGER.info("Player has level {} in {}", skillLevels.get(skill), skill.name);
-        }
-
     }
 
     public void updateAllEffects(ServerPlayerEntity player) {

@@ -41,11 +41,10 @@ class CombatSkill extends Skill {
         super(Constants.combatSkillName, Constants.combatSkillLevelOneReq, Constants.combatSkillLevelReqModifier);
     }
     public long xp(@NotNull ServerPlayerEntity player) {
-        long xp = (long) (player.getStatHandler().getStat(Stats.CUSTOM.getOrCreateStat(Stats.DAMAGE_DEALT))
+        return (long) (player.getStatHandler().getStat(Stats.CUSTOM.getOrCreateStat(Stats.DAMAGE_DEALT))
                 + player.getStatHandler().getStat(Stats.CUSTOM.getOrCreateStat(Stats.DAMAGE_BLOCKED_BY_SHIELD))
                 + player.getStatHandler().getStat(Stats.CUSTOM.getOrCreateStat(Stats.TARGET_HIT)));
-        LOGGER.info("Player has {} xp in combat", xp);
-        return xp;
+
     }
 }
 
@@ -55,9 +54,8 @@ class SwimmingSkill extends Skill {
     }
 
     public long xp(@NotNull ServerPlayerEntity player) {
-        long xp = (long) (player.getStatHandler().getStat(Stats.CUSTOM.getOrCreateStat(Stats.SWIM_ONE_CM))) / 100;
-        LOGGER.info("Player has {} xp in Swimming", xp);
-        return xp;
+        return (long) (player.getStatHandler().getStat(Stats.CUSTOM.getOrCreateStat(Stats.SWIM_ONE_CM))) / 100;
+
     }
 }
 
@@ -67,9 +65,7 @@ class WalkingSkill extends Skill {
     }
 
     public long xp(@NotNull ServerPlayerEntity player) {
-        long xp = (long) (player.getStatHandler().getStat(Stats.CUSTOM.getOrCreateStat(Stats.WALK_ONE_CM))) / 100;
-        LOGGER.info("Player has {} xp in Walking", xp);
-        return xp;
+        return (long) (player.getStatHandler().getStat(Stats.CUSTOM.getOrCreateStat(Stats.WALK_ONE_CM))) / 100;
     }
 }
 
@@ -79,9 +75,7 @@ class RunningSkill extends Skill {
     }
 
     public long xp(@NotNull ServerPlayerEntity player) {
-        long xp = (long) (player.getStatHandler().getStat(Stats.CUSTOM.getOrCreateStat(Stats.SPRINT_ONE_CM))) / 100;
-        LOGGER.info("Player has {} xp in Running", xp);
-        return xp;
+        return (long) (player.getStatHandler().getStat(Stats.CUSTOM.getOrCreateStat(Stats.SPRINT_ONE_CM))) / 100;
     }
 }
 
@@ -95,7 +89,6 @@ class MiningSkill extends Skill {
         for (Block block : Constants.miningXp.keySet()) {
             xp += (long) (player.getStatHandler().getStat(Stats.MINED.getOrCreateStat(block)) * Constants.miningXp.get(block));
         }
-        LOGGER.info("Player has {} xp in Mining", xp);
         return xp;
     }
 }
@@ -107,9 +100,7 @@ class JumpingSkill extends Skill {
     }
 
     public long xp(@NotNull ServerPlayerEntity player) {
-        long xp = player.getStatHandler().getStat(Stats.CUSTOM.getOrCreateStat(Stats.JUMP));
-        LOGGER.info("Player has {} xp in Jumping", xp);
-        return xp;
+        return player.getStatHandler().getStat(Stats.CUSTOM.getOrCreateStat(Stats.JUMP));
     }
 }
 
@@ -123,7 +114,6 @@ class NaturesGraceSkill extends Skill {
         for (Block block : Constants.naturesGraceXp.keySet()) {
             xp += (long) (player.getStatHandler().getStat(Stats.MINED.getOrCreateStat(block)) * Constants.naturesGraceXp.get(block));
         }
-        LOGGER.info("Player has {} xp in Natures Grace", xp);
         return xp;
     }
 }
@@ -134,8 +124,6 @@ class ToughnessSkill extends Skill {
     }
 
     public long xp(@NotNull ServerPlayerEntity player) {
-        long xp = player.getStatHandler().getStat(Stats.CUSTOM.getOrCreateStat(Stats.DAMAGE_TAKEN));
-        LOGGER.info("Player has {} xp in Toughness", xp);
-        return xp;
+        return player.getStatHandler().getStat(Stats.CUSTOM.getOrCreateStat(Stats.DAMAGE_TAKEN));
     }
 }

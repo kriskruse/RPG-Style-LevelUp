@@ -36,7 +36,6 @@ public class RPGLevelManager {
         for (ServerPlayerEntity player : playerLevelManager.keySet()) {
             updatePlayerLevel(player);
             updatePlayerEffects(player);
-            LOGGER.info("Updated player {}", player.getName().getString());
         }
     }
 

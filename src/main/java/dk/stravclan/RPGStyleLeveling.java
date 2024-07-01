@@ -2,12 +2,14 @@ package dk.stravclan;
 
 import net.fabricmc.api.ModInitializer;
 
+import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
+import static net.minecraft.server.command.CommandManager.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,6 +23,7 @@ public class RPGStyleLeveling implements ModInitializer {
 	public long tick = 0;
 
 	RPGLevelManager levelManager = new RPGLevelManager();
+	RPGUiManager uiManager = new RPGUiManager();
 
 	@Override
 	public void onInitialize() {
@@ -36,15 +39,22 @@ public class RPGStyleLeveling implements ModInitializer {
 			if (tick % 200 == 0) {
 				LOGGER.info("Updating players");
 				levelManager.updatePlayers();
+				//uiManager.updatePlayers();
 			}
-
 		});
 
 		ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
 			// This code will run every time a player joins the server.
 			ServerPlayerEntity player =  handler.player;
 			levelManager.addPlayer(player);
+			uiManager.addPlayer(player);
 			LOGGER.info("Player {} has joined the server!", player.getName().getString());
+		});
+
+		CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
+			dispatcher.register(literal("rpg")
+				.executes(context -> RPGCommandManager.rpg(context.getSource()))
+			);
 		});
 
 		LOGGER.info("RPG Style Leveling has been initialized!");
