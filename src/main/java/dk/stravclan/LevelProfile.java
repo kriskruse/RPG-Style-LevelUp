@@ -7,16 +7,15 @@ import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 public class LevelProfile {
     public static final Logger LOGGER = LoggerFactory.getLogger("rpg-style-leveling");
 
-    private final Skill combatSkill = new CombatSkill();
-
-    private final Map<Skill, Integer> skillLevels = new HashMap<Skill, Integer>();
+    private final Map<Skill, Integer> skillLevels = new HashMap<>();
 
     public LevelProfile(ServerPlayerEntity player){
+        Skill combatSkill = new CombatSkill();
+        skillLevels.put(combatSkill, combatSkill.level(player));
         updateAllSkills(player);
     }
 

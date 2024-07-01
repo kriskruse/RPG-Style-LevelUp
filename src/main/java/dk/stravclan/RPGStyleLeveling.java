@@ -5,6 +5,7 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import org.slf4j.Logger;
@@ -19,6 +20,8 @@ public class RPGStyleLeveling implements ModInitializer {
     public static final Logger LOGGER = LoggerFactory.getLogger("rpg-style-leveling");
 	public long tick = 0;
 
+	RPGLevelManager levelManager = new RPGLevelManager();
+
 	@Override
 	public void onInitialize() {
 		// This code runs as soon as Minecraft is in a mod-load-ready state.
@@ -26,47 +29,25 @@ public class RPGStyleLeveling implements ModInitializer {
 		// Proceed with mild caution.
 		LOGGER.info("Hello from RPG Style Leveling!");
 
-		ServerLifecycleEvents.SERVER_STARTED.register(server -> {
-			// This code will run when the server starts.
-
-		});
-
 		ServerTickEvents.START_SERVER_TICK.register(server -> {
 			// This code will run every tick on the server.
+			// 20 tick is equal to 1 second
 			tick += 1;
-			if (tick % 20 == 0) {
-				// This code will run once every second.
-				LOGGER.info("One second has passed!");
-			}
 			if (tick % 200 == 0) {
-				// This code will run once every ten seconds.
-				updatePlayers(server);
+				LOGGER.info("Updating players");
+				levelManager.updatePlayers();
 			}
 
 		});
 
-		ServerEntityEvents.ENTITY_LOAD.register((entity, serverWorld) -> {
-			// This code will run every time an entity is loaded.
-			if (entity instanceof ServerPlayerEntity) {
-				// This code will run every time a player joins the server.
-				LOGGER.info("Player joined: {}", entity.getName());
-			}
-
+		ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
+			// This code will run every time a player joins the server.
+			ServerPlayerEntity player =  handler.player;
+			levelManager.addPlayer(player);
+			LOGGER.info("Player {} has joined the server!", player.getName().getString());
 		});
-
-
 
 		LOGGER.info("RPG Style Leveling has been initialized!");
 	}
-
-	private void updatePlayers(MinecraftServer server) {
-		List<ServerPlayerEntity> players = server.getPlayerManager().getPlayerList();
-		for (ServerPlayerEntity player : players) {
-			// This code will run once every ten seconds for each player.
-            LOGGER.info("Player {} is online!", player.getName().getString());
-		}
-	}
-
-
 }
 

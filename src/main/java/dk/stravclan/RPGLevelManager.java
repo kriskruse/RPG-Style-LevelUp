@@ -29,7 +29,10 @@ public class RPGLevelManager {
     }
 
     public void updatePlayers(){
-        playerManager.replaceAll((s, v) -> v);
+        for (ServerPlayerEntity player : playerManager.keySet()) {
+            updatePlayer(player);
+            LOGGER.info("Updated player {}", player.getName().getString());
+        }
     }
 
 }
