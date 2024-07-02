@@ -53,9 +53,38 @@ public class RPGStyleLeveling implements ModInitializer {
 
 		CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
 			dispatcher.register(literal("rpg")
-				.executes(context -> RPGCommandManager.rpg(context.getSource()))
-			);
+				.executes(context -> {
+					ServerPlayerEntity player = context.getSource().getPlayer();
+					RPGCommandManager.rpg(player, levelManager);
+					return 1;
+				}
+			));
 		});
+
+		CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
+			dispatcher.register(literal("rpg")
+							.then(literal("status")
+					.executes(context -> {
+								ServerPlayerEntity player = context.getSource().getPlayer();
+								RPGCommandManager.rpg(player, levelManager);
+								return 1;
+							}
+					)
+				));
+		});
+
+		CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
+			dispatcher.register(literal("rpg")
+				.then(literal("reset")
+					.executes(context -> {
+								ServerPlayerEntity player = context.getSource().getPlayer();
+								RPGCommandManager.resetCommand(player, levelManager);
+								return 1;
+							}
+					)
+				));
+		});
+
 
 		LOGGER.info("RPG Style Leveling has been initialized!");
 	}
