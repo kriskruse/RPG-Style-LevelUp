@@ -50,18 +50,23 @@ public class LevelProfile {
 
     private void updateEffect(@NotNull ServerPlayerEntity player, Skill skill) {
         int amplifier = skillLevels.get(skill);
+        RegistryEntry<StatusEffect> effect = Constants.skillEffects.get(skill.name);
         if (amplifier < 1) {
+            player.removeStatusEffect(effect);
             return;
         }
-        amplifier -= 1; // 0 based
-        RegistryEntry<StatusEffect> effect = Constants.skillEffects.get(skill.name);
-        StatusEffectInstance effectInstance = new StatusEffectInstance(effect, -1, amplifier); // -1 duration means infinite
+        // -1 duration means infinite, amplifier - 1 because level 1 effect is amplifier 0
+        StatusEffectInstance effectInstance = new StatusEffectInstance(effect, -1, amplifier - 1); // -1 duration means infinite
         try {
-            player.addStatusEffect(effectInstance, player);
+            player.setStatusEffect(effectInstance, player);
         } catch (Exception e) {
             LOGGER.error("Failed to add effect {} to player {}", effect, player.getName().getString());
             LOGGER.error(e.getMessage());
         }
+    }
+
+    public Map<Skill, Integer> getSkillLevels(){
+        return skillLevels;
     }
 
 }

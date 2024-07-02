@@ -13,25 +13,31 @@ abstract class Skill {
     public String name;
     public float levelOneReq;
     public float levelReqModifier;
+    public float nextLevelReq;
+    public long xp;
+    public int level;
 
 
     public Skill(String name, float levelOneReq, float levelReqModifier) {
         this.name = name;
         this.levelOneReq = levelOneReq;
         this.levelReqModifier = levelReqModifier;
+        this.level = 0;
+        this.xp = 0;
+        this.nextLevelReq = levelOneReq;
     }
 
     public int level(ServerPlayerEntity player) {
-        int level = 0;
-        long xp = xp(player);
-        float levelReq = levelOneReq;
+        xp = xp(player);
+        nextLevelReq = (float) (levelOneReq * Math.pow(level, levelReqModifier));
 
-        while (xp > levelReq) {
-            levelReq *= levelReqModifier;
+        while (xp > nextLevelReq) {
+            nextLevelReq = (float) (levelOneReq * Math.pow(level, levelReqModifier));
             level ++;
         }
         return level;
     }
+
     public abstract long xp(@NotNull ServerPlayerEntity player);
 
 }

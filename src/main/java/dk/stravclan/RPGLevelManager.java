@@ -39,6 +39,15 @@ public class RPGLevelManager {
         }
     }
 
+    public LevelProfile getLevelProfile(ServerPlayerEntity player){
+        updatePlayerLevel(player);
+        updatePlayerEffects(player);
+        return playerLevelManager.get(player);
+    }
 
-
+    public void resetPlayer(ServerPlayerEntity player){
+        playerLevelManager.put(player, new LevelProfile(player));
+        updatePlayerLevel(player);
+        updatePlayerEffects(player);
+    }
 }
