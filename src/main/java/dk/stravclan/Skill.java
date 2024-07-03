@@ -31,12 +31,13 @@ abstract class Skill {
     public void level(ServerPlayerEntity player) {
         xp = calculateXP(player);
         int oldLevel = level;
-        nextLevelReq = (float) (levelOneReq * Math.max(Math.pow(level, levelReqModifier),1));
+        nextLevelReq = (float) (levelOneReq * Math.pow(level + 1, levelReqModifier));
 
         while (xp > nextLevelReq) {
-            nextLevelReq = (float) (levelOneReq * Math.max(Math.pow(level, levelReqModifier),1));
             level ++;
+            this.nextLevelReq = (float) (levelOneReq * Math.pow(level + 1, levelReqModifier));
         }
+
         // update effect target level if the level has changed and the user has not manually changed it
         if (oldLevel == effectTargetLevel) {
             effectTargetLevel = level;
@@ -64,7 +65,7 @@ class CombatSkill extends Skill {
     public long calculateXP(@NotNull ServerPlayerEntity player) {
         return (player.getStatHandler().getStat(Stats.CUSTOM.getOrCreateStat(Stats.DAMAGE_DEALT))
                 + player.getStatHandler().getStat(Stats.CUSTOM.getOrCreateStat(Stats.DAMAGE_BLOCKED_BY_SHIELD))
-                + player.getStatHandler().getStat(Stats.CUSTOM.getOrCreateStat(Stats.TARGET_HIT)));
+                + player.getStatHandler().getStat(Stats.CUSTOM.getOrCreateStat(Stats.TARGET_HIT))) / 100;
 
     }
 }
@@ -145,6 +146,6 @@ class ToughnessSkill extends Skill {
     }
 
     public long calculateXP(@NotNull ServerPlayerEntity player) {
-        return player.getStatHandler().getStat(Stats.CUSTOM.getOrCreateStat(Stats.DAMAGE_TAKEN));
+        return player.getStatHandler().getStat(Stats.CUSTOM.getOrCreateStat(Stats.DAMAGE_TAKEN)) / 100;
     }
 }

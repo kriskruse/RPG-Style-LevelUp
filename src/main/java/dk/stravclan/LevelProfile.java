@@ -26,6 +26,7 @@ public class LevelProfile {
         skills.add(new CombatSkill());
         skills.add(new MiningSkill());
         updateAllSkills(player);
+
     }
 
     public void updateAllSkills(ServerPlayerEntity player){
