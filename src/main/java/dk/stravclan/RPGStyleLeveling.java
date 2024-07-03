@@ -29,13 +29,13 @@ public class RPGStyleLeveling implements ModInitializer {
         // However, some things (like resources) may still be uninitialized.
         // Proceed with mild caution.
         LOGGER.info("Hello from RPG Style Leveling!");
+        LOGGER.info("Initializing...");
 
         ServerTickEvents.START_SERVER_TICK.register(server -> {
             // This code will run every tick on the server.
             // 20 tick is equal to 1 second
             tick += 1;
             if (tick % 200 == 0) {
-                LOGGER.info("Updating players");
                 levelManager.updatePlayers();
                 //uiManager.updatePlayers();
             }
@@ -46,7 +46,7 @@ public class RPGStyleLeveling implements ModInitializer {
             ServerPlayerEntity player = handler.player;
             levelManager.addPlayer(player);
             uiManager.addPlayer(player);
-            LOGGER.info("Player {} has joined the server!", player.getName().getString());
+            //LOGGER.info("Player {} has joined the server!", player.getName().getString());
         });
 
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {

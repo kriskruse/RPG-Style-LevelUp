@@ -13,29 +13,29 @@ import static net.minecraft.entity.effect.StatusEffects.*;
 
 public class Constants {
     public static final String runningSkillName = "Running";
-    public static final int runningSkillLevelOneReq = 15000;
+    public static final float runningSkillLevelOneReq = 15000f;
     public static final float runningSkillLevelReqModifier = 2f;
     public static final String swimmingSkillName = "Swimming";
-    public static final int swimmingSkillLevelOneReq = 1500;
+    public static final float swimmingSkillLevelOneReq = 1500f;
     public static final float swimmingSkillLevelReqModifier = 2f;
     public static final String combatSkillName = "Combat";
-    public static final int combatSkillLevelOneReq = 15000;
+    public static final float combatSkillLevelOneReq = 15000f;
     public static final float combatSkillLevelReqModifier = 2.5f;
     public static final String miningSkillName = "Mining";
-    public static final int miningSkillLevelOneReq = 5000;
+    public static final float miningSkillLevelOneReq = 5000f;
     public static final float miningSkillLevelReqModifier = 2f;
     public static final String walkingSkillName = "Walking";
-    public static final int walkingSkillLevelOneReq = 15000;
+    public static final float walkingSkillLevelOneReq = 15000f;
     public static final float walkingSkillLevelReqModifier = 2f;
     public static final String jumpingSkillName = "Jumping";
-    public static final int jumpingSkillLevelOneReq = 15000;
+    public static final float jumpingSkillLevelOneReq = 15000f;
     public static final float jumpingSkillLevelReqModifier = 2f;
     public static final String naturesGraceSkillName = "Natures Grace";
-    public static final int naturesGraceSkillLevelOneReq = 1000;
+    public static final float naturesGraceSkillLevelOneReq = 1000f;
     public static final float naturesGraceSkillLevelReqModifier = 2f;
-    public static final String ToughnessSkillName = "Toughness";
-    public static final int ToughnessSkillLevelOneReq = 10000;
-    public static final float ToughnessSkillLevelReqModifier = 1.5F;
+    public static final String toughnessSkillName = "Toughness";
+    public static final float toughnessSkillLevelOneReq = 10000f;
+    public static final float toughnessSkillLevelReqModifier = 1.5F;
 
     public static final List<String> skillNames = List.of(
             combatSkillName,
@@ -45,7 +45,7 @@ public class Constants {
             miningSkillName,
             jumpingSkillName,
             naturesGraceSkillName,
-            ToughnessSkillName
+            toughnessSkillName
     );
 
 
@@ -76,7 +76,7 @@ public class Constants {
             entry(miningSkillName, HASTE),
             entry(jumpingSkillName, JUMP_BOOST),
             entry(naturesGraceSkillName, LUCK),
-            entry(ToughnessSkillName, RESISTANCE)
+            entry(toughnessSkillName, RESISTANCE)
     );
 
     public static final Map<Block, Float> naturesGraceXp = Map.ofEntries(

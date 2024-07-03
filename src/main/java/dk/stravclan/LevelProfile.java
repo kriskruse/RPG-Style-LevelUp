@@ -8,23 +8,23 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.LinkedList;
 import java.util.List;
 
 public class LevelProfile {
     public static final Logger LOGGER = LoggerFactory.getLogger("rpg-style-leveling");
 
-    public List<Skill> skills = List.of(
-            new CombatSkill(),
-            new SwimmingSkill(),
-            new RunningSkill(),
-            new WalkingSkill(),
-            new MiningSkill(),
-            new JumpingSkill(),
-            new NaturesGraceSkill(),
-            new ToughnessSkill()
-    );
+    public List<Skill> skills = new LinkedList<>();
 
     public LevelProfile(ServerPlayerEntity player){
+        skills.add(new NaturesGraceSkill());
+        skills.add(new ToughnessSkill());
+        skills.add(new RunningSkill());
+        skills.add(new WalkingSkill());
+        skills.add(new SwimmingSkill());
+        skills.add(new JumpingSkill());
+        skills.add(new CombatSkill());
+        skills.add(new MiningSkill());
         updateAllSkills(player);
     }
 

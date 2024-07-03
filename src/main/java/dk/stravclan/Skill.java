@@ -31,12 +31,13 @@ abstract class Skill {
     public void level(ServerPlayerEntity player) {
         xp = calculateXP(player);
         int oldLevel = level;
-        nextLevelReq = (float) (levelOneReq * Math.pow(level, levelReqModifier));
+        nextLevelReq = (float) (levelOneReq * Math.max(Math.pow(level, levelReqModifier),1));
 
         while (xp > nextLevelReq) {
-            nextLevelReq = (float) (levelOneReq * Math.pow(level, levelReqModifier));
+            nextLevelReq = (float) (levelOneReq * Math.max(Math.pow(level, levelReqModifier),1));
             level ++;
         }
+        // update effect target level if the level has changed and the user has not manually changed it
         if (oldLevel == effectTargetLevel) {
             effectTargetLevel = level;
         }
@@ -140,7 +141,7 @@ class NaturesGraceSkill extends Skill {
 
 class ToughnessSkill extends Skill {
     public ToughnessSkill() {
-        super(Constants.ToughnessSkillName, Constants.ToughnessSkillLevelOneReq, Constants.ToughnessSkillLevelReqModifier);
+        super(Constants.toughnessSkillName, Constants.toughnessSkillLevelOneReq, Constants.toughnessSkillLevelReqModifier);
     }
 
     public long calculateXP(@NotNull ServerPlayerEntity player) {
