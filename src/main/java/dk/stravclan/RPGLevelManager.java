@@ -1,6 +1,5 @@
 package dk.stravclan;
 
-import io.netty.util.IntSupplier;
 import net.minecraft.server.network.ServerPlayerEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,4 +49,11 @@ public class RPGLevelManager {
         updatePlayerLevel(player);
         updatePlayerEffects(player);
     }
+
+    public void changeEffectTargetPlayer(ServerPlayerEntity player, String effect, int i) {
+        playerLevelManager.get(player).changeEffectTarget(effect, i);
+        updatePlayerEffects(player);
+    }
+
+
 }

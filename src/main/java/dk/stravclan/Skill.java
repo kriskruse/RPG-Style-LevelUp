@@ -16,6 +16,7 @@ abstract class Skill {
     public float nextLevelReq;
     public long xp;
     public int level;
+    public int effectTargetLevel;
 
 
     public Skill(String name, float levelOneReq, float levelReqModifier) {
@@ -27,18 +28,31 @@ abstract class Skill {
         this.nextLevelReq = levelOneReq;
     }
 
-    public int level(ServerPlayerEntity player) {
-        xp = xp(player);
+    public void level(ServerPlayerEntity player) {
+        xp = calculateXP(player);
+        int oldLevel = level;
         nextLevelReq = (float) (levelOneReq * Math.pow(level, levelReqModifier));
 
         while (xp > nextLevelReq) {
             nextLevelReq = (float) (levelOneReq * Math.pow(level, levelReqModifier));
             level ++;
         }
-        return level;
+        if (oldLevel == effectTargetLevel) {
+            effectTargetLevel = level;
+        }
     }
 
-    public abstract long xp(@NotNull ServerPlayerEntity player);
+    public void changeEffectTargetLevel(int i) {
+        if (i > 0){
+            effectTargetLevel = Math.min(level, effectTargetLevel + i);
+        }else if (i < 0){
+            effectTargetLevel = Math.max(0, effectTargetLevel + i);
+        }else {
+            LOGGER.error("Effect target level change was 0");
+        }
+    }
+
+    public abstract long calculateXP(@NotNull ServerPlayerEntity player);
 
 }
 
@@ -46,8 +60,8 @@ class CombatSkill extends Skill {
     public CombatSkill() {
         super(Constants.combatSkillName, Constants.combatSkillLevelOneReq, Constants.combatSkillLevelReqModifier);
     }
-    public long xp(@NotNull ServerPlayerEntity player) {
-        return (long) (player.getStatHandler().getStat(Stats.CUSTOM.getOrCreateStat(Stats.DAMAGE_DEALT))
+    public long calculateXP(@NotNull ServerPlayerEntity player) {
+        return (player.getStatHandler().getStat(Stats.CUSTOM.getOrCreateStat(Stats.DAMAGE_DEALT))
                 + player.getStatHandler().getStat(Stats.CUSTOM.getOrCreateStat(Stats.DAMAGE_BLOCKED_BY_SHIELD))
                 + player.getStatHandler().getStat(Stats.CUSTOM.getOrCreateStat(Stats.TARGET_HIT)));
 
@@ -59,7 +73,7 @@ class SwimmingSkill extends Skill {
         super(Constants.swimmingSkillName, Constants.swimmingSkillLevelOneReq, Constants.swimmingSkillLevelReqModifier);
     }
 
-    public long xp(@NotNull ServerPlayerEntity player) {
+    public long calculateXP(@NotNull ServerPlayerEntity player) {
         return (long) (player.getStatHandler().getStat(Stats.CUSTOM.getOrCreateStat(Stats.SWIM_ONE_CM))) / 100;
 
     }
@@ -70,7 +84,7 @@ class WalkingSkill extends Skill {
         super(Constants.walkingSkillName, Constants.walkingSkillLevelOneReq, Constants.walkingSkillLevelReqModifier);
     }
 
-    public long xp(@NotNull ServerPlayerEntity player) {
+    public long calculateXP(@NotNull ServerPlayerEntity player) {
         return (long) (player.getStatHandler().getStat(Stats.CUSTOM.getOrCreateStat(Stats.WALK_ONE_CM))) / 100;
     }
 }
@@ -80,7 +94,7 @@ class RunningSkill extends Skill {
         super(Constants.runningSkillName, Constants.runningSkillLevelOneReq, Constants.runningSkillLevelReqModifier);
     }
 
-    public long xp(@NotNull ServerPlayerEntity player) {
+    public long calculateXP(@NotNull ServerPlayerEntity player) {
         return (long) (player.getStatHandler().getStat(Stats.CUSTOM.getOrCreateStat(Stats.SPRINT_ONE_CM))) / 100;
     }
 }
@@ -90,7 +104,7 @@ class MiningSkill extends Skill {
         super(Constants.miningSkillName, Constants.miningSkillLevelOneReq, Constants.miningSkillLevelReqModifier);
     }
 
-    public long xp(@NotNull ServerPlayerEntity player) {
+    public long calculateXP(@NotNull ServerPlayerEntity player) {
         long xp = 0;
         for (Block block : Constants.miningXp.keySet()) {
             xp += (long) (player.getStatHandler().getStat(Stats.MINED.getOrCreateStat(block)) * Constants.miningXp.get(block));
@@ -105,7 +119,7 @@ class JumpingSkill extends Skill {
         super(Constants.jumpingSkillName, Constants.jumpingSkillLevelOneReq, Constants.jumpingSkillLevelReqModifier);
     }
 
-    public long xp(@NotNull ServerPlayerEntity player) {
+    public long calculateXP(@NotNull ServerPlayerEntity player) {
         return player.getStatHandler().getStat(Stats.CUSTOM.getOrCreateStat(Stats.JUMP));
     }
 }
@@ -115,7 +129,7 @@ class NaturesGraceSkill extends Skill {
         super(Constants.naturesGraceSkillName, Constants.naturesGraceSkillLevelOneReq, Constants.naturesGraceSkillLevelReqModifier);
     }
 
-    public long xp(@NotNull ServerPlayerEntity player) {
+    public long calculateXP(@NotNull ServerPlayerEntity player) {
         long xp = 0;
         for (Block block : Constants.naturesGraceXp.keySet()) {
             xp += (long) (player.getStatHandler().getStat(Stats.MINED.getOrCreateStat(block)) * Constants.naturesGraceXp.get(block));
@@ -129,7 +143,7 @@ class ToughnessSkill extends Skill {
         super(Constants.ToughnessSkillName, Constants.ToughnessSkillLevelOneReq, Constants.ToughnessSkillLevelReqModifier);
     }
 
-    public long xp(@NotNull ServerPlayerEntity player) {
+    public long calculateXP(@NotNull ServerPlayerEntity player) {
         return player.getStatHandler().getStat(Stats.CUSTOM.getOrCreateStat(Stats.DAMAGE_TAKEN));
     }
 }

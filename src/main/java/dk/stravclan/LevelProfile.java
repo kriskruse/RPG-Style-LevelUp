@@ -8,48 +8,40 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 public class LevelProfile {
     public static final Logger LOGGER = LoggerFactory.getLogger("rpg-style-leveling");
 
-    private final Map<Skill, Integer> skillLevels = new HashMap<>();
+    public List<Skill> skills = List.of(
+            new CombatSkill(),
+            new SwimmingSkill(),
+            new RunningSkill(),
+            new WalkingSkill(),
+            new MiningSkill(),
+            new JumpingSkill(),
+            new NaturesGraceSkill(),
+            new ToughnessSkill()
+    );
 
     public LevelProfile(ServerPlayerEntity player){
-        Skill combatSkill = new CombatSkill();
-        skillLevels.put(combatSkill, combatSkill.level(player));
-        Skill swimmingSkill = new SwimmingSkill();
-        skillLevels.put(swimmingSkill, swimmingSkill.level(player));
-        Skill runningSkill = new RunningSkill();
-        skillLevels.put(runningSkill, runningSkill.level(player));
-        Skill walkingSkill = new WalkingSkill();
-        skillLevels.put(walkingSkill, walkingSkill.level(player));
-        Skill miningSkill = new MiningSkill();
-        skillLevels.put(miningSkill, miningSkill.level(player));
-        Skill jumpingSkill = new JumpingSkill();
-        skillLevels.put(jumpingSkill, jumpingSkill.level(player));
-        Skill naturesGraceSkill = new NaturesGraceSkill();
-        skillLevels.put(naturesGraceSkill, naturesGraceSkill.level(player));
-        Skill toughnessSkill = new ToughnessSkill();
-        skillLevels.put(toughnessSkill, toughnessSkill.level(player));
-
-
         updateAllSkills(player);
     }
 
     public void updateAllSkills(ServerPlayerEntity player){
-        skillLevels.replaceAll((s, v) -> s.level(player));
+        for (Skill skill : skills) {
+            skill.level(player);
+        }
     }
 
     public void updateAllEffects(ServerPlayerEntity player) {
-        for (Skill skill : skillLevels.keySet()) {
+        for (Skill skill : skills) {
             updateEffect(player, skill);
         }
     }
 
     private void updateEffect(@NotNull ServerPlayerEntity player, Skill skill) {
-        int amplifier = skillLevels.get(skill);
+        int amplifier = skill.effectTargetLevel;
         RegistryEntry<StatusEffect> effect = Constants.skillEffects.get(skill.name);
         if (amplifier < 1) {
             player.removeStatusEffect(effect);
@@ -65,8 +57,28 @@ public class LevelProfile {
         }
     }
 
-    public Map<Skill, Integer> getSkillLevels(){
-        return skillLevels;
+    public void changeEffectTarget(String skillName, int amount){
+        Skill skill = findSkillWithName(skillName);
+        if (skill == null) {
+            LOGGER.error("INCREMENT-EFFECT Could not find skill with name {}", skillName);
+            return;
+        }
+        skill.changeEffectTargetLevel(amount);
+    }
+
+    private Skill findSkillWithName(String skillName) {
+        for (Skill skill : skills) {
+            if (skill.name.equals(skillName)) {
+                return skill;
+            }
+        }
+        LOGGER.error("Could not find skill with name {}", skillName);
+        return null;
+    }
+
+
+    public List<Skill> getSkillLevels(){
+        return skills;
     }
 
 }

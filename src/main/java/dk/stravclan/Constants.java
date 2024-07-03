@@ -4,6 +4,7 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.registry.entry.RegistryEntry;
 
+import java.util.List;
 import java.util.Map;
 
 import static java.util.Map.entry;
@@ -12,29 +13,40 @@ import static net.minecraft.entity.effect.StatusEffects.*;
 
 public class Constants {
     public static final String runningSkillName = "Running";
-    public static final int runningSkillLevelOneReq = 10;
-    public static final float runningSkillLevelReqModifier = 3.1f;
+    public static final int runningSkillLevelOneReq = 15000;
+    public static final float runningSkillLevelReqModifier = 2f;
     public static final String swimmingSkillName = "Swimming";
-    public static final int swimmingSkillLevelOneReq = 5;
-    public static final float swimmingSkillLevelReqModifier = 3.1f;
+    public static final int swimmingSkillLevelOneReq = 1500;
+    public static final float swimmingSkillLevelReqModifier = 2f;
     public static final String combatSkillName = "Combat";
-    public static final int combatSkillLevelOneReq = 10;
-    public static final float combatSkillLevelReqModifier = 2.1f;
+    public static final int combatSkillLevelOneReq = 15000;
+    public static final float combatSkillLevelReqModifier = 2.5f;
     public static final String miningSkillName = "Mining";
-    public static final int miningSkillLevelOneReq = 15;
-    public static final float miningSkillLevelReqModifier = 2.1f;
+    public static final int miningSkillLevelOneReq = 5000;
+    public static final float miningSkillLevelReqModifier = 2f;
     public static final String walkingSkillName = "Walking";
-    public static final int walkingSkillLevelOneReq = 10;
-    public static final float walkingSkillLevelReqModifier = 3.1f;
+    public static final int walkingSkillLevelOneReq = 15000;
+    public static final float walkingSkillLevelReqModifier = 2f;
     public static final String jumpingSkillName = "Jumping";
-    public static final int jumpingSkillLevelOneReq = 10;
-    public static final float jumpingSkillLevelReqModifier = 3.1f;
+    public static final int jumpingSkillLevelOneReq = 15000;
+    public static final float jumpingSkillLevelReqModifier = 2f;
     public static final String naturesGraceSkillName = "Natures Grace";
-    public static final int naturesGraceSkillLevelOneReq = 10;
-    public static final float naturesGraceSkillLevelReqModifier = 3.1f;
+    public static final int naturesGraceSkillLevelOneReq = 1000;
+    public static final float naturesGraceSkillLevelReqModifier = 2f;
     public static final String ToughnessSkillName = "Toughness";
-    public static final int ToughnessSkillLevelOneReq = 10;
-    public static final float ToughnessSkillLevelReqModifier = 3.1f;
+    public static final int ToughnessSkillLevelOneReq = 10000;
+    public static final float ToughnessSkillLevelReqModifier = 1.5F;
+
+    public static final List<String> skillNames = List.of(
+            combatSkillName,
+            swimmingSkillName,
+            runningSkillName,
+            walkingSkillName,
+            miningSkillName,
+            jumpingSkillName,
+            naturesGraceSkillName,
+            ToughnessSkillName
+    );
 
 
     public static final Map<Block, Float> miningXp = Map.ofEntries(
