@@ -12,7 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 abstract class Skill {
-    public static final Logger LOGGER = LoggerFactory.getLogger("rpg-style-leveling");
+    public static final Logger LOGGER = LoggerFactory.getLogger(Constants.MOD_ID);
 
     public String name;
     public float levelOneReq;
@@ -23,10 +23,10 @@ abstract class Skill {
     public int effectTargetLevel;
 
 
-    public Skill(String name, float levelOneReq, float levelReqModifier) {
+    public Skill(String name) {
         this.name = name;
-        this.levelOneReq = levelOneReq;
-        this.levelReqModifier = levelReqModifier;
+        this.levelOneReq = Constants.skillDataMap.get(name).get("levelOneReq");
+        this.levelReqModifier = Constants.skillDataMap.get(name).get("modifier");
         this.level = 0;
         this.xp = 0;
         this.nextLevelReq = levelOneReq;
@@ -82,7 +82,7 @@ abstract class Skill {
 
 class CombatSkill extends Skill {
     public CombatSkill() {
-        super(Constants.combatSkillName, Constants.combatSkillLevelOneReq, Constants.combatSkillLevelReqModifier);
+        super(Constants.combatSkillName);
     }
 
     public long calculateXP(@NotNull ServerPlayerEntity player) {
@@ -95,7 +95,7 @@ class CombatSkill extends Skill {
 
 class SwimmingSkill extends Skill {
     public SwimmingSkill() {
-        super(Constants.swimmingSkillName, Constants.swimmingSkillLevelOneReq, Constants.swimmingSkillLevelReqModifier);
+        super(Constants.swimmingSkillName);
     }
 
     public long calculateXP(@NotNull ServerPlayerEntity player) {
@@ -106,7 +106,7 @@ class SwimmingSkill extends Skill {
 
 class WalkingSkill extends Skill {
     public WalkingSkill() {
-        super(Constants.walkingSkillName, Constants.walkingSkillLevelOneReq, Constants.walkingSkillLevelReqModifier);
+        super(Constants.walkingSkillName);
     }
 
     public long calculateXP(@NotNull ServerPlayerEntity player) {
@@ -116,7 +116,7 @@ class WalkingSkill extends Skill {
 
 class RunningSkill extends Skill {
     public RunningSkill() {
-        super(Constants.runningSkillName, Constants.runningSkillLevelOneReq, Constants.runningSkillLevelReqModifier);
+        super(Constants.runningSkillName);
     }
 
     public long calculateXP(@NotNull ServerPlayerEntity player) {
@@ -126,7 +126,7 @@ class RunningSkill extends Skill {
 
 class MiningSkill extends Skill {
     public MiningSkill() {
-        super(Constants.miningSkillName, Constants.miningSkillLevelOneReq, Constants.miningSkillLevelReqModifier);
+        super(Constants.miningSkillName);
     }
 
     public long calculateXP(@NotNull ServerPlayerEntity player) {
@@ -141,7 +141,7 @@ class MiningSkill extends Skill {
 
 class JumpingSkill extends Skill {
     public JumpingSkill() {
-        super(Constants.jumpingSkillName, Constants.jumpingSkillLevelOneReq, Constants.jumpingSkillLevelReqModifier);
+        super(Constants.jumpingSkillName);
     }
 
     public long calculateXP(@NotNull ServerPlayerEntity player) {
@@ -151,7 +151,7 @@ class JumpingSkill extends Skill {
 
 class NaturesGraceSkill extends Skill {
     public NaturesGraceSkill() {
-        super(Constants.naturesGraceSkillName, Constants.naturesGraceSkillLevelOneReq, Constants.naturesGraceSkillLevelReqModifier);
+        super(Constants.naturesGraceSkillName);
     }
 
     public long calculateXP(@NotNull ServerPlayerEntity player) {
@@ -165,7 +165,7 @@ class NaturesGraceSkill extends Skill {
 
 class ToughnessSkill extends Skill {
     public ToughnessSkill() {
-        super(Constants.toughnessSkillName, Constants.toughnessSkillLevelOneReq, Constants.toughnessSkillLevelReqModifier);
+        super(Constants.toughnessSkillName);
     }
 
     public long calculateXP(@NotNull ServerPlayerEntity player) {
@@ -175,7 +175,7 @@ class ToughnessSkill extends Skill {
 
 class TotalSkill extends Skill {
     public TotalSkill() {
-        super("Total", 1, 1);
+        super("Total");
     }
 
     public long calculateXP(@NotNull ServerPlayerEntity player) {
@@ -184,6 +184,12 @@ class TotalSkill extends Skill {
             xp += skill.level;
         }
         return xp;
+    }
+
+    @Override
+    public void level(ServerPlayerEntity player) {
+        level = (int) calculateXP(player);
+
     }
 
     @Override

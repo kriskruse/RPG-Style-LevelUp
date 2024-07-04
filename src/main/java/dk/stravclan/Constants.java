@@ -4,6 +4,8 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.registry.entry.RegistryEntry;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -12,46 +14,34 @@ import static net.minecraft.block.Blocks.*;
 import static net.minecraft.entity.effect.StatusEffects.*;
 
 public class Constants {
-    public static final String runningSkillName = "Running";
-    public static final float runningSkillLevelOneReq = 15000f;
-    public static final float runningSkillLevelReqModifier = 2f;
-    public static final String swimmingSkillName = "Swimming";
-    public static final float swimmingSkillLevelOneReq = 1500f;
-    public static final float swimmingSkillLevelReqModifier = 2f;
-    public static final String combatSkillName = "Combat";
-    public static final float combatSkillLevelOneReq = 15000f;
-    public static final float combatSkillLevelReqModifier = 2.5f;
-    public static final String miningSkillName = "Mining";
-    public static final float miningSkillLevelOneReq = 5000f;
-    public static final float miningSkillLevelReqModifier = 2f;
-    public static final String walkingSkillName = "Walking";
-    public static final float walkingSkillLevelOneReq = 15000f;
-    public static final float walkingSkillLevelReqModifier = 2f;
-    public static final String jumpingSkillName = "Jumping";
-    public static final float jumpingSkillLevelOneReq = 15000f;
-    public static final float jumpingSkillLevelReqModifier = 2f;
-    public static final String naturesGraceSkillName = "Natures Grace";
-    public static final float naturesGraceSkillLevelOneReq = 1000f;
-    public static final float naturesGraceSkillLevelReqModifier = 2f;
-    public static final String toughnessSkillName = "Toughness";
-    public static final float toughnessSkillLevelOneReq = 10000f;
-    public static final float toughnessSkillLevelReqModifier = 1.5F;
+    public static final String MOD_ID = "rpg-style-leveling";
 
+    public static final String combatSkillName = "Combat";
+    public static final String swimmingSkillName = "Swimming";
+    public static final String runningSkillName = "Running";
+    public static final String walkingSkillName = "Walking";
+    public static final String miningSkillName = "Mining";
+    public static final String jumpingSkillName = "Jumping";
+    public static final String naturesGraceSkillName = "NaturesGrace";
+    public static final String toughnessSkillName = "Toughness";
     public static final String totalSkillName = "Total";
 
 
-    public static final List<String> skillNames = List.of(
-            combatSkillName,
-            swimmingSkillName,
-            runningSkillName,
-            walkingSkillName,
-            miningSkillName,
-            jumpingSkillName,
-            naturesGraceSkillName,
-            toughnessSkillName,
-            totalSkillName
-    );
+    public static Map<String, Map<String, Float>> skillDataMap = new HashMap<>();
+    static {
+        skillDataMap.put(runningSkillName, Map.of("levelOneReq", 15000f, "modifier", 2f));
+        skillDataMap.put(swimmingSkillName, Map.of("levelOneReq", 1500f, "modifier", 2f));
+        skillDataMap.put(combatSkillName, Map.of("levelOneReq", 15000f, "modifier", 2.5f));
+        skillDataMap.put(miningSkillName, Map.of("levelOneReq", 5000f, "modifier", 2f));
+        skillDataMap.put(walkingSkillName, Map.of("levelOneReq", 15000f, "modifier", 2f));
+        skillDataMap.put(jumpingSkillName, Map.of("levelOneReq", 15000f, "modifier", 2f));
+        skillDataMap.put(naturesGraceSkillName, Map.of("levelOneReq", 1000f, "modifier", 2f));
+        skillDataMap.put(toughnessSkillName, Map.of("levelOneReq", 10000f, "modifier", 1.5f));
+        skillDataMap.put(totalSkillName, Map.of("levelOneReq", 1f, "modifier", 1f));
+    }
 
+
+    public static final List<String> skillNames = new ArrayList<>(skillDataMap.keySet());
 
     public static final Map<Block, Float> miningXp = Map.ofEntries(
             entry(NETHERRACK, 0.01f),

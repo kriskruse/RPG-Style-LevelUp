@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class RPGLevelManager {
-    public static final Logger LOGGER = LoggerFactory.getLogger("rpg-style-leveling");
+    public static final Logger LOGGER = LoggerFactory.getLogger(Constants.MOD_ID);
     private final Map<ServerPlayerEntity, LevelProfile> playerLevelManager = new HashMap<>();
 
 

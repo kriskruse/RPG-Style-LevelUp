@@ -12,7 +12,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class LevelProfile {
-    public static final Logger LOGGER = LoggerFactory.getLogger("rpg-style-leveling");
+    public static final Logger LOGGER = LoggerFactory.getLogger(Constants.MOD_ID);
 
     public static List<Skill> skills = new LinkedList<>();
 

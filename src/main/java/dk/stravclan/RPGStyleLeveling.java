@@ -17,7 +17,7 @@ public class RPGStyleLeveling implements ModInitializer {
     // This logger is used to write text to the console and the log file.
     // It is considered best practice to use your mod id as the logger's name.
     // That way, it's clear which mod wrote info, warnings, and errors.
-    public static final Logger LOGGER = LoggerFactory.getLogger("rpg-style-leveling");
+    public static final Logger LOGGER = LoggerFactory.getLogger(Constants.MOD_ID);
     public long tick = 0;
 
     RPGLevelManager levelManager = new RPGLevelManager();
@@ -88,16 +88,12 @@ public class RPGStyleLeveling implements ModInitializer {
                     .then(literal("changeLevel")
                             .then(argument("skill", StringArgumentType.string())
                                     .then(argument("amount", IntegerArgumentType.integer()).executes(context -> {
-                                        ServerPlayerEntity player = context.getSource().getPlayer();
-                                        if (player == null) {
-                                            return 0;
-                                        }
                                         int val =  RPGCommandManager.changeEffectLevel(
-                                                player,
+                                                context,
                                                 levelManager,
                                                 StringArgumentType.getString(context, "skill"),
                                                 IntegerArgumentType.getInteger(context, "amount"));
-                                        RPGCommandManager.rpg(player, levelManager);
+                                        RPGCommandManager.rpg(context.getSource().getPlayer(), levelManager);
                                         return val;
                                     })))));
         });

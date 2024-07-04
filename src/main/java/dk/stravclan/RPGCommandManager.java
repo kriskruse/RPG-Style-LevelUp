@@ -1,5 +1,7 @@
 package dk.stravclan;
 
+import com.mojang.brigadier.context.CommandContext;
+import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.ClickEvent;
 import net.minecraft.text.MutableText;
@@ -12,7 +14,7 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 
 public class RPGCommandManager {
-    public static final Logger LOGGER = LoggerFactory.getLogger("rpg-style-leveling");
+    public static final Logger LOGGER = LoggerFactory.getLogger(Constants.MOD_ID);
 
     private static final Style incrementStyle = Style.EMPTY
             .withColor(Formatting.GREEN)
@@ -33,13 +35,18 @@ public class RPGCommandManager {
         lvlManager.resetPlayer(player);
     }
 
-    public static int changeEffectLevel(ServerPlayerEntity player, RPGLevelManager levelManager, String skillName, int i) {
+    public static int changeEffectLevel(CommandContext<ServerCommandSource> context, RPGLevelManager levelManager, String skillName, int i) {
+        ServerPlayerEntity player = context.getSource().getPlayer();
+        if (player == null) {
+            LOGGER.error("Player is null");
+            return 0;
+        }
         LOGGER.info("Lowering effect of {} by {} for player {}", skillName, i, player.getName().getString());
         if (Constants.skillNames.contains(skillName)) {
             levelManager.changeEffectTargetPlayer(player, skillName, i);
             return 1;
         } else {
-            player.sendMessage(Text.of("That skill does not exist!"), false);
+            context.getSource().sendFeedback(() -> Text.of("That skill does not exist!"), false);
             return 0;
         }
     }
@@ -61,5 +68,13 @@ public class RPGCommandManager {
             message.append("\n");
         }
         return message;
+    }
+
+    public static void setSkillLevelOneReq(String skillName, float newValue){
+
+    }
+
+    public static void setSkillLevelReqModifier(String skillName, float newValue){
+
     }
 }
