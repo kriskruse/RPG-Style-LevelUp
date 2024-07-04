@@ -38,7 +38,7 @@ abstract class Skill {
         nextLevelReq = (float) (levelOneReq * Math.pow(level + 1, levelReqModifier));
 
         while (xp > nextLevelReq) {
-            level ++;
+            level++;
             this.nextLevelReq = (float) (levelOneReq * Math.pow(level + 1, levelReqModifier));
         }
 
@@ -49,11 +49,11 @@ abstract class Skill {
     }
 
     public void changeEffectTargetLevel(int i) {
-        if (i > 0){
+        if (i > 0) {
             effectTargetLevel = Math.min(level, effectTargetLevel + i);
-        }else if (i < 0){
+        } else if (i < 0) {
             effectTargetLevel = Math.max(0, effectTargetLevel + i);
-        }else {
+        } else {
             LOGGER.error("Effect target level change was 0");
         }
     }
@@ -70,7 +70,8 @@ abstract class Skill {
         } catch (Exception e) {
             LOGGER.error("Failed to add effect {} to player {}", effect, player.getName().getString());
 
-        };
+        }
+        ;
     }
 
     public abstract long calculateXP(@NotNull ServerPlayerEntity player);
@@ -82,6 +83,7 @@ class CombatSkill extends Skill {
     public CombatSkill() {
         super(Constants.combatSkillName, Constants.combatSkillLevelOneReq, Constants.combatSkillLevelReqModifier);
     }
+
     public long calculateXP(@NotNull ServerPlayerEntity player) {
         return (player.getStatHandler().getStat(Stats.CUSTOM.getOrCreateStat(Stats.DAMAGE_DEALT))
                 + player.getStatHandler().getStat(Stats.CUSTOM.getOrCreateStat(Stats.DAMAGE_BLOCKED_BY_SHIELD))
@@ -184,19 +186,19 @@ class TotalSkill extends Skill {
     }
 
     @Override
-    public void upatedEffectOnPlayer(ServerPlayerEntity player){
+    public void upatedEffectOnPlayer(ServerPlayerEntity player) {
         RegistryEntry<StatusEffect> effect = Constants.skillEffects.get(name);
         if (level < 1) {
             player.removeStatusEffect(effect);
             return;
         }
-        StatusEffectInstance effectInstance = new StatusEffectInstance(effect, -1, (Math.floorDiv(level,5)) - 1);
+        StatusEffectInstance effectInstance = new StatusEffectInstance(effect, -1, (Math.floorDiv(level, 5)) - 1);
         try {
             player.setStatusEffect(effectInstance, player);
         } catch (Exception e) {
             LOGGER.error("Failed to add TotalLevel skills effect {} to player {}", effect, player.getName().getString());
 
-        };
-    }
+        }
+        ;
     }
 }
