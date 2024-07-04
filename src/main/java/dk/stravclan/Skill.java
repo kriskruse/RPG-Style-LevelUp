@@ -64,7 +64,8 @@ abstract class Skill {
             player.removeStatusEffect(effect);
             return;
         }
-        StatusEffectInstance effectInstance = new StatusEffectInstance(effect, -1, effectTargetLevel - 1);
+        StatusEffectInstance effectInstance = new StatusEffectInstance(
+                effect, -1, effectTargetLevel - 1, false, false, false);
         try {
             player.setStatusEffect(effectInstance, player);
         } catch (Exception e) {
@@ -192,13 +193,13 @@ class TotalSkill extends Skill {
             player.removeStatusEffect(effect);
             return;
         }
-        StatusEffectInstance effectInstance = new StatusEffectInstance(effect, -1, (Math.floorDiv(level, 5)) - 1);
+        StatusEffectInstance effectInstance = new StatusEffectInstance(
+                effect, -1, (Math.floorDiv(level, 5)) - 1, false, false, false);
         try {
             player.setStatusEffect(effectInstance, player);
         } catch (Exception e) {
             LOGGER.error("Failed to add TotalLevel skills effect {} to player {}", effect, player.getName().getString());
 
-        }
-        ;
+        };
     }
 }
