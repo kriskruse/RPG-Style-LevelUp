@@ -37,6 +37,9 @@ public class Constants {
     public static final float toughnessSkillLevelOneReq = 10000f;
     public static final float toughnessSkillLevelReqModifier = 1.5F;
 
+    public static final String totalSkillName = "Total";
+
+
     public static final List<String> skillNames = List.of(
             combatSkillName,
             swimmingSkillName,
@@ -45,7 +48,8 @@ public class Constants {
             miningSkillName,
             jumpingSkillName,
             naturesGraceSkillName,
-            toughnessSkillName
+            toughnessSkillName,
+            totalSkillName
     );
 
 
@@ -65,7 +69,7 @@ public class Constants {
             entry(DIAMOND_ORE, 4f),
             entry(EMERALD_ORE, 4f),
             entry(NETHER_GOLD_ORE, 3f),
-            entry(ANCIENT_DEBRIS, 5f)
+            entry(ANCIENT_DEBRIS, 10f)
     );
 
     public static final Map<String, RegistryEntry<StatusEffect>> skillEffects = Map.ofEntries(
@@ -76,7 +80,8 @@ public class Constants {
             entry(miningSkillName, HASTE),
             entry(jumpingSkillName, JUMP_BOOST),
             entry(naturesGraceSkillName, LUCK),
-            entry(toughnessSkillName, RESISTANCE)
+            entry(toughnessSkillName, RESISTANCE),
+            entry(totalSkillName, HEALTH_BOOST)
     );
 
     public static final Map<Block, Float> naturesGraceXp = Map.ofEntries(
@@ -93,7 +98,7 @@ public class Constants {
             entry(OXEYE_DAISY, 1f),
             entry(CORNFLOWER, 1f),
             entry(LILY_OF_THE_VALLEY, 1f),
-            entry(WITHER_ROSE, 3f),
+            entry(WITHER_ROSE, 10f),
             entry(SUNFLOWER, 1f),
             entry(LILAC, 1f),
             entry(ROSE_BUSH, 1f),

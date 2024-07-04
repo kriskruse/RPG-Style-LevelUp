@@ -1,6 +1,10 @@
 package dk.stravclan;
 
+import net.fabricmc.fabric.api.screenhandler.v1.FabricScreenHandlerFactory;
 import net.minecraft.block.Block;
+import net.minecraft.entity.effect.StatusEffect;
+import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.stat.Stats;
 import org.jetbrains.annotations.NotNull;
@@ -54,9 +58,25 @@ abstract class Skill {
         }
     }
 
+    public void upatedEffectOnPlayer(@NotNull ServerPlayerEntity player) {
+        RegistryEntry<StatusEffect> effect = Constants.skillEffects.get(name);
+        if (effectTargetLevel < 1) {
+            player.removeStatusEffect(effect);
+            return;
+        }
+        StatusEffectInstance effectInstance = new StatusEffectInstance(effect, -1, effectTargetLevel - 1);
+        try {
+            player.setStatusEffect(effectInstance, player);
+        } catch (Exception e) {
+            LOGGER.error("Failed to add effect {} to player {}", effect, player.getName().getString());
+
+        };
+    }
+
     public abstract long calculateXP(@NotNull ServerPlayerEntity player);
 
 }
+
 
 class CombatSkill extends Skill {
     public CombatSkill() {
@@ -147,5 +167,36 @@ class ToughnessSkill extends Skill {
 
     public long calculateXP(@NotNull ServerPlayerEntity player) {
         return player.getStatHandler().getStat(Stats.CUSTOM.getOrCreateStat(Stats.DAMAGE_TAKEN)) / 100;
+    }
+}
+
+class TotalSkill extends Skill {
+    public TotalSkill() {
+        super("Total", 1, 1);
+    }
+
+    public long calculateXP(@NotNull ServerPlayerEntity player) {
+        long xp = 0;
+        for (Skill skill : LevelProfile.skills) {
+            xp += skill.level;
+        }
+        return xp;
+    }
+
+    @Override
+    public void upatedEffectOnPlayer(ServerPlayerEntity player){
+        RegistryEntry<StatusEffect> effect = Constants.skillEffects.get(name);
+        if (level < 1) {
+            player.removeStatusEffect(effect);
+            return;
+        }
+        StatusEffectInstance effectInstance = new StatusEffectInstance(effect, -1, (Math.floorDiv(level,5)) - 1);
+        try {
+            player.setStatusEffect(effectInstance, player);
+        } catch (Exception e) {
+            LOGGER.error("Failed to add TotalLevel skills effect {} to player {}", effect, player.getName().getString());
+
+        };
+    }
     }
 }
