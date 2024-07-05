@@ -123,9 +123,10 @@ public class RPGStyleLeveling implements ModInitializer {
                 .then(literal("resetAllPlayers")
                         .requires(source -> source.hasPermissionLevel(2))
                         .executes(context -> {
-                            RPGCommandManager.resetAllPlayers(playerLevelManager);
+                            RPGCommandManager.resetAllPlayers(context, playerLevelManager);
                             return 1;
                         })
+                )
 
         ));
 
