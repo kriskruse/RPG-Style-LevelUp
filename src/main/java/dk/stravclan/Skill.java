@@ -186,6 +186,9 @@ class TotalSkill extends Skill {
     public long calculateXP(@NotNull ServerPlayerEntity player, LevelProfile levelProfile) {
         long xp = 0;
         for (Skill skill : levelProfile.skills) {
+            if (skill.name.equals("Total")) {
+                continue;
+            }
             xp += skill.level;
         }
         return xp;
