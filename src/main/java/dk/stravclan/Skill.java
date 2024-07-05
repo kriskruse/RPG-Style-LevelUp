@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-abstract class Skill {
+public abstract class Skill {
     public static final Logger LOGGER = LoggerFactory.getLogger(Constants.MOD_ID);
 
     public String name;
@@ -105,7 +105,7 @@ class SwimmingSkill extends Skill {
     }
 
     public void calculateXP(@NotNull ServerPlayerEntity player, LevelProfile levelProfile) {
-        xp = (int) (player.getStatHandler().getStat(Stats.CUSTOM.getOrCreateStat(Stats.SWIM_ONE_CM))) / 100;
+        xp = (player.getStatHandler().getStat(Stats.CUSTOM.getOrCreateStat(Stats.SWIM_ONE_CM))) / 100;
 
     }
 }
@@ -194,6 +194,7 @@ class TotalSkill extends Skill {
             xp += skill.level;
         }
         this.xp = xp;
+        this.nextLevelReq = xp + 1;
     }
 
 
