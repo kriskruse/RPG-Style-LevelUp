@@ -19,7 +19,7 @@ public class RPGStyleLeveling implements ModInitializer {
     public static final Logger LOGGER = LoggerFactory.getLogger(Constants.MOD_ID);
     public long tick = 0;
 
-    RPGLevelManager levelManager = new RPGLevelManager();
+    RPGPlayerLevelManager playerLevelManager = new RPGPlayerLevelManager();
     RPGUiManager uiManager = new RPGUiManager();
 
 
@@ -37,7 +37,7 @@ public class RPGStyleLeveling implements ModInitializer {
             // 20 tick is equal to 1 second
             tick += 1;
             if (tick % 200 == 0) {
-                levelManager.updatePlayers();
+                playerLevelManager.updatePlayers();
                 //uiManager.updatePlayers();
             }
         });
@@ -45,7 +45,7 @@ public class RPGStyleLeveling implements ModInitializer {
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
             // This code will run every time a player joins the server.
             ServerPlayerEntity player = handler.player;
-            levelManager.addPlayer(player);
+            playerLevelManager.addPlayer(player);
             uiManager.addPlayer(player);
             //LOGGER.info("Player {} has joined the server!", player.getName().getString());
         });
@@ -53,7 +53,7 @@ public class RPGStyleLeveling implements ModInitializer {
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> dispatcher.register(literal("rpg")
                 .executes(context -> {
                             ServerPlayerEntity player = context.getSource().getPlayer();
-                            RPGCommandManager.rpg(player, levelManager);
+                            RPGCommandManager.rpg(player, playerLevelManager);
                             return 1;
                         }
                 )
@@ -61,7 +61,7 @@ public class RPGStyleLeveling implements ModInitializer {
                 .then(literal("status")
                         .executes(context -> {
                                     ServerPlayerEntity player = context.getSource().getPlayer();
-                                    RPGCommandManager.rpg(player, levelManager);
+                                    RPGCommandManager.rpg(player, playerLevelManager);
                                     return 1;
                                 }
                         )
@@ -70,7 +70,7 @@ public class RPGStyleLeveling implements ModInitializer {
                 .then(literal("reset")
                         .executes(context -> {
                                     ServerPlayerEntity player = context.getSource().getPlayer();
-                                    RPGCommandManager.resetCommand(player, levelManager);
+                                    RPGCommandManager.resetCommand(player, playerLevelManager);
                                     return 1;
                                 }
                         )
@@ -81,10 +81,10 @@ public class RPGStyleLeveling implements ModInitializer {
                                 .then(argument("amount", IntegerArgumentType.integer()).executes(context -> {
                                     int val = RPGCommandManager.changeEffectLevel(
                                             context,
-                                            levelManager,
+                                            playerLevelManager,
                                             StringArgumentType.getString(context, "skill"),
                                             IntegerArgumentType.getInteger(context, "amount"));
-                                    RPGCommandManager.rpg(context.getSource().getPlayer(), levelManager);
+                                    RPGCommandManager.rpg(context.getSource().getPlayer(), playerLevelManager);
                                     return val;
                                 })))
                 )
@@ -100,7 +100,7 @@ public class RPGStyleLeveling implements ModInitializer {
                                             context,
                                             StringArgumentType.getString(context, "skill"),
                                             FloatArgumentType.getFloat(context, "amount"),
-                                            levelManager);
+                                            playerLevelManager);
                                     SettingsManager.saveSettings();
                                     return val;
                                 }))
@@ -114,12 +114,18 @@ public class RPGStyleLeveling implements ModInitializer {
                                             context,
                                             StringArgumentType.getString(context, "skill"),
                                             FloatArgumentType.getFloat(context, "amount"),
-                                            levelManager);
+                                            playerLevelManager);
                                     SettingsManager.saveSettings();
                                     return val;
                                 }))
                         )
                 )
+                .then(literal("resetAllPlayers")
+                        .requires(source -> source.hasPermissionLevel(2))
+                        .executes(context -> {
+                            RPGCommandManager.resetAllPlayers(playerLevelManager);
+                            return 1;
+                        })
 
         ));
 

@@ -12,7 +12,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
-import java.util.Map;
 
 public class RPGCommandManager {
     public static final Logger LOGGER = LoggerFactory.getLogger(Constants.MOD_ID);
@@ -25,18 +24,18 @@ public class RPGCommandManager {
             .withColor(Formatting.RED)
             .withBold(true);
 
-    public static void rpg(ServerPlayerEntity player, RPGLevelManager lvlManager) {
+    public static void rpg(ServerPlayerEntity player, RPGPlayerLevelManager lvlManager) {
         LevelProfile profile = lvlManager.getLevelProfile(player);
         List<Skill> skills = profile.skills;
         MutableText message = generateMessage(skills);
         player.sendMessage(message, false);
     }
 
-    public static void resetCommand(ServerPlayerEntity player, RPGLevelManager lvlManager) {
+    public static void resetCommand(ServerPlayerEntity player, RPGPlayerLevelManager lvlManager) {
         lvlManager.resetPlayer(player);
     }
 
-    public static int changeEffectLevel(CommandContext<ServerCommandSource> context, RPGLevelManager levelManager, String skillName, int i) {
+    public static int changeEffectLevel(CommandContext<ServerCommandSource> context, RPGPlayerLevelManager levelManager, String skillName, int i) {
         ServerPlayerEntity player = context.getSource().getPlayer();
         if (player == null) {
             LOGGER.error("Player is null");
@@ -71,12 +70,12 @@ public class RPGCommandManager {
         return message;
     }
 
-    public static int setSkillLevelOneReq(CommandContext<ServerCommandSource> context, String skillName, float newValue, RPGLevelManager levelManager){
-        LOGGER.info("Setting levelOneReq of {} to {}", skillName, newValue);
+    public static int setSkillLevelOneReq(CommandContext<ServerCommandSource> context, String skillName, float newValue, RPGPlayerLevelManager playerLevelManager){
         if (Constants.skillNames.contains(skillName)) {
             Constants.changeSkillData(skillName, "levelOneReq", newValue);
-            levelManager.updatePlayers();
+            playerLevelManager.updatePlayers();
             LOGGER.info("LevelOneReq of {} set to {} successfully", skillName, newValue);
+            context.getSource().sendFeedback(() -> Text.of("LevelOneRequirement of " + skillName + " set to " + newValue), true);
             return 1;
         } else {
             context.getSource().sendFeedback(() -> Text.of("That skill does not exist!"), false);
@@ -85,12 +84,12 @@ public class RPGCommandManager {
         }
     }
 
-    public static int setSkillLevelReqModifier(CommandContext<ServerCommandSource> context, String skillName, float newValue, RPGLevelManager levelManager){
-        LOGGER.info("Setting modifier of {} to {}", skillName, newValue);
+    public static int setSkillLevelReqModifier(CommandContext<ServerCommandSource> context, String skillName, float newValue, RPGPlayerLevelManager playerLevelManager){
         if (Constants.skillNames.contains(skillName)) {
             Constants.changeSkillData(skillName, "modifier", newValue);
-            levelManager.updatePlayers();
+            playerLevelManager.updatePlayers();
             LOGGER.info("Modifier of {} set to {} successfully", skillName, newValue);
+            context.getSource().sendFeedback(() -> Text.of("Modifier of " + skillName + " set to " + newValue), true);
             return 1;
         } else {
             context.getSource().sendFeedback(() -> Text.of("That skill does not exist!"), false);
@@ -98,5 +97,13 @@ public class RPGCommandManager {
             return 0;
         }
 
+    }
+
+    public static void resetAllPlayers(CommandContext<ServerCommandSource> context, RPGPlayerLevelManager playerLevelManager) {
+        for (ServerPlayerEntity player : playerLevelManager.getPlayerLevelManager().keySet()) {
+            playerLevelManager.resetPlayer(player);
+        }
+        playerLevelManager.updatePlayers();
+        context.getSource().sendFeedback(() -> Text.of("All players have been reset and updated!"), true);
     }
 }

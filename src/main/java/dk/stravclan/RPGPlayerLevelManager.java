@@ -7,12 +7,12 @@ import org.slf4j.LoggerFactory;
 import java.util.HashMap;
 import java.util.Map;
 
-public class RPGLevelManager {
+public class RPGPlayerLevelManager {
     public static final Logger LOGGER = LoggerFactory.getLogger(Constants.MOD_ID);
     private final Map<ServerPlayerEntity, LevelProfile> playerLevelManager = new HashMap<>();
 
 
-    public RPGLevelManager(){}
+    public RPGPlayerLevelManager(){}
 
     public void addPlayer(ServerPlayerEntity player){
         playerLevelManager.put(player, new LevelProfile(player));
@@ -58,6 +58,10 @@ public class RPGLevelManager {
     public void changeEffectTargetPlayer(ServerPlayerEntity player, String effect, int i) {
         playerLevelManager.get(player).changeEffectTarget(effect, i);
         updatePlayerEffects(player);
+    }
+
+    public Map<ServerPlayerEntity, LevelProfile> getPlayerLevelManager() {
+        return this.playerLevelManager;
     }
 
 

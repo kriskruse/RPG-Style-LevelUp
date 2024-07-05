@@ -76,6 +76,8 @@ abstract class Skill {
     public void updateRequirements() {
         levelOneReq = Constants.skillDataMap.get(name).get("levelOneReq");
         levelReqModifier = Constants.skillDataMap.get(name).get("modifier");
+        level = 0;
+        xp = 0;
     }
 
     public abstract long calculateXP(@NotNull ServerPlayerEntity player, LevelProfile levelProfile);
