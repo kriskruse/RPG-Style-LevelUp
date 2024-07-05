@@ -94,7 +94,7 @@ class CombatSkill extends Skill {
     public long calculateXP(@NotNull ServerPlayerEntity player, LevelProfile levelProfile) {
         return (player.getStatHandler().getStat(Stats.CUSTOM.getOrCreateStat(Stats.DAMAGE_DEALT))
                 + player.getStatHandler().getStat(Stats.CUSTOM.getOrCreateStat(Stats.DAMAGE_BLOCKED_BY_SHIELD))
-                + player.getStatHandler().getStat(Stats.CUSTOM.getOrCreateStat(Stats.TARGET_HIT))) / 100;
+                + player.getStatHandler().getStat(Stats.CUSTOM.getOrCreateStat(Stats.TARGET_HIT)));
 
     }
 }
@@ -175,7 +175,7 @@ class ToughnessSkill extends Skill {
     }
 
     public long calculateXP(@NotNull ServerPlayerEntity player, LevelProfile levelProfile) {
-        return player.getStatHandler().getStat(Stats.CUSTOM.getOrCreateStat(Stats.DAMAGE_TAKEN)) / 100;
+        return player.getStatHandler().getStat(Stats.CUSTOM.getOrCreateStat(Stats.DAMAGE_TAKEN));
     }
 }
 
@@ -210,7 +210,7 @@ class TotalSkill extends Skill {
             return;
         }
         StatusEffectInstance effectInstance = new StatusEffectInstance(
-                effect, -1, (Math.floorDiv(level, 5)) - 1, false, false, false);
+                effect, -1,  (level /5) - 1, false, false, false);
         try {
             player.setStatusEffect(effectInstance, player);
         } catch (Exception e) {
