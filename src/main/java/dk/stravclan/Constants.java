@@ -15,6 +15,7 @@ import static net.minecraft.entity.effect.StatusEffects.*;
 
 public class Constants {
     public static final String MOD_ID = "rpg-style-leveling";
+    public static final String SETTINGS_FILE = "config/rpg-style-leveling.json";
 
     public static final String combatSkillName = "Combat";
     public static final String swimmingSkillName = "Swimming";
@@ -40,8 +41,15 @@ public class Constants {
         skillDataMap.put(totalSkillName, Map.of("levelOneReq", 1f, "modifier", 1f));
     }
 
+    public static void changeSkillData(String skillName, String key, Float value) {
+        skillDataMap.get(skillName).put(key, value);
+    }
+    public static void setSkillDataMap(Map<String, Map<String, Float>> map) {
+        skillDataMap = map;
+    }
 
-    public static final List<String> skillNames = new ArrayList<>(skillDataMap.keySet());
+
+    public static final ArrayList skillNames = new ArrayList<>(skillDataMap.keySet());
 
     public static final Map<Block, Float> miningXp = Map.ofEntries(
             entry(NETHERRACK, 0.01f),

@@ -1,10 +1,6 @@
 package dk.stravclan;
 
-import net.minecraft.entity.effect.StatusEffect;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.network.ServerPlayerEntity;
-import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,7 +10,7 @@ import java.util.List;
 public class LevelProfile {
     public static final Logger LOGGER = LoggerFactory.getLogger(Constants.MOD_ID);
 
-    public static List<Skill> skills = new LinkedList<>();
+    public List<Skill> skills = new LinkedList<>();
 
     public LevelProfile(ServerPlayerEntity player){
         skills.add(new NaturesGraceSkill());
@@ -32,13 +28,14 @@ public class LevelProfile {
 
     public void updateAllSkills(ServerPlayerEntity player){
         for (Skill skill : skills) {
-            skill.level(player);
+            skill.updateRequirements();
+            skill.level(player, this);
         }
     }
 
     public void updateAllEffects(ServerPlayerEntity player) {
         for (Skill skill : skills) {
-            skill.upatedEffectOnPlayer(player);
+            skill.updateEffectOnPlayer(player);
         }
     }
 
@@ -61,10 +58,4 @@ public class LevelProfile {
         LOGGER.error("Could not find skill with name {}", skillName);
         return null;
     }
-
-
-    public List<Skill> getSkillLevels(){
-        return skills;
-    }
-
 }

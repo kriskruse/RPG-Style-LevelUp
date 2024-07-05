@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.Map;
 
 public class RPGCommandManager {
     public static final Logger LOGGER = LoggerFactory.getLogger(Constants.MOD_ID);
@@ -70,11 +71,32 @@ public class RPGCommandManager {
         return message;
     }
 
-    public static void setSkillLevelOneReq(String skillName, float newValue){
-
+    public static int setSkillLevelOneReq(CommandContext<ServerCommandSource> context, String skillName, float newValue, RPGLevelManager levelManager){
+        LOGGER.info("Setting levelOneReq of {} to {}", skillName, newValue);
+        if (Constants.skillNames.contains(skillName)) {
+            Constants.changeSkillData(skillName, "levelOneReq", newValue);
+            levelManager.updatePlayers();
+            LOGGER.info("LevelOneReq of {} set to {} successfully", skillName, newValue);
+            return 1;
+        } else {
+            context.getSource().sendFeedback(() -> Text.of("That skill does not exist!"), false);
+            LOGGER.error("(set levelOneReq): Skill {} does not exist", skillName);
+            return 0;
+        }
     }
 
-    public static void setSkillLevelReqModifier(String skillName, float newValue){
+    public static int setSkillLevelReqModifier(CommandContext<ServerCommandSource> context, String skillName, float newValue, RPGLevelManager levelManager){
+        LOGGER.info("Setting modifier of {} to {}", skillName, newValue);
+        if (Constants.skillNames.contains(skillName)) {
+            Constants.changeSkillData(skillName, "modifier", newValue);
+            levelManager.updatePlayers();
+            LOGGER.info("Modifier of {} set to {} successfully", skillName, newValue);
+            return 1;
+        } else {
+            context.getSource().sendFeedback(() -> Text.of("That skill does not exist!"), false);
+            LOGGER.error("(set modifier): Skill {} does not exist", skillName);
+            return 0;
+        }
 
     }
 }

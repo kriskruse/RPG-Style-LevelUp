@@ -46,10 +46,4 @@ public class RPGUiManager {
             }
         }
     }
-
-    public void updatePlayers() {
-        for (ServerPlayerEntity player : trackedPlayers) {
-            updateUi(player);
-        }
-    }
 }

@@ -1,6 +1,5 @@
 package dk.stravclan;
 
-import net.fabricmc.fabric.api.screenhandler.v1.FabricScreenHandlerFactory;
 import net.minecraft.block.Block;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
@@ -32,8 +31,8 @@ abstract class Skill {
         this.nextLevelReq = levelOneReq;
     }
 
-    public void level(ServerPlayerEntity player) {
-        xp = calculateXP(player);
+    public void level(ServerPlayerEntity player, LevelProfile levelProfile) {
+        xp = calculateXP(player, levelProfile);
         int oldLevel = level;
         nextLevelReq = (float) (levelOneReq * Math.pow(level + 1, levelReqModifier));
 
@@ -58,7 +57,7 @@ abstract class Skill {
         }
     }
 
-    public void upatedEffectOnPlayer(@NotNull ServerPlayerEntity player) {
+    public void updateEffectOnPlayer(@NotNull ServerPlayerEntity player) {
         RegistryEntry<StatusEffect> effect = Constants.skillEffects.get(name);
         if (effectTargetLevel < 1) {
             player.removeStatusEffect(effect);
@@ -72,10 +71,15 @@ abstract class Skill {
             LOGGER.error("Failed to add effect {} to player {}", effect, player.getName().getString());
 
         }
-        ;
     }
 
-    public abstract long calculateXP(@NotNull ServerPlayerEntity player);
+    public void updateRequirements() {
+        levelOneReq = Constants.skillDataMap.get(name).get("levelOneReq");
+        levelReqModifier = Constants.skillDataMap.get(name).get("modifier");
+    }
+
+    public abstract long calculateXP(@NotNull ServerPlayerEntity player, LevelProfile levelProfile);
+
 
 }
 
@@ -85,7 +89,7 @@ class CombatSkill extends Skill {
         super(Constants.combatSkillName);
     }
 
-    public long calculateXP(@NotNull ServerPlayerEntity player) {
+    public long calculateXP(@NotNull ServerPlayerEntity player, LevelProfile levelProfile) {
         return (player.getStatHandler().getStat(Stats.CUSTOM.getOrCreateStat(Stats.DAMAGE_DEALT))
                 + player.getStatHandler().getStat(Stats.CUSTOM.getOrCreateStat(Stats.DAMAGE_BLOCKED_BY_SHIELD))
                 + player.getStatHandler().getStat(Stats.CUSTOM.getOrCreateStat(Stats.TARGET_HIT))) / 100;
@@ -98,7 +102,7 @@ class SwimmingSkill extends Skill {
         super(Constants.swimmingSkillName);
     }
 
-    public long calculateXP(@NotNull ServerPlayerEntity player) {
+    public long calculateXP(@NotNull ServerPlayerEntity player, LevelProfile levelProfile) {
         return (long) (player.getStatHandler().getStat(Stats.CUSTOM.getOrCreateStat(Stats.SWIM_ONE_CM))) / 100;
 
     }
@@ -109,7 +113,7 @@ class WalkingSkill extends Skill {
         super(Constants.walkingSkillName);
     }
 
-    public long calculateXP(@NotNull ServerPlayerEntity player) {
+    public long calculateXP(@NotNull ServerPlayerEntity player, LevelProfile levelProfile) {
         return (long) (player.getStatHandler().getStat(Stats.CUSTOM.getOrCreateStat(Stats.WALK_ONE_CM))) / 100;
     }
 }
@@ -119,7 +123,7 @@ class RunningSkill extends Skill {
         super(Constants.runningSkillName);
     }
 
-    public long calculateXP(@NotNull ServerPlayerEntity player) {
+    public long calculateXP(@NotNull ServerPlayerEntity player, LevelProfile levelProfile) {
         return (long) (player.getStatHandler().getStat(Stats.CUSTOM.getOrCreateStat(Stats.SPRINT_ONE_CM))) / 100;
     }
 }
@@ -129,7 +133,7 @@ class MiningSkill extends Skill {
         super(Constants.miningSkillName);
     }
 
-    public long calculateXP(@NotNull ServerPlayerEntity player) {
+    public long calculateXP(@NotNull ServerPlayerEntity player, LevelProfile levelProfile) {
         long xp = 0;
         for (Block block : Constants.miningXp.keySet()) {
             xp += (long) (player.getStatHandler().getStat(Stats.MINED.getOrCreateStat(block)) * Constants.miningXp.get(block));
@@ -144,7 +148,7 @@ class JumpingSkill extends Skill {
         super(Constants.jumpingSkillName);
     }
 
-    public long calculateXP(@NotNull ServerPlayerEntity player) {
+    public long calculateXP(@NotNull ServerPlayerEntity player, LevelProfile levelProfile) {
         return player.getStatHandler().getStat(Stats.CUSTOM.getOrCreateStat(Stats.JUMP));
     }
 }
@@ -154,7 +158,7 @@ class NaturesGraceSkill extends Skill {
         super(Constants.naturesGraceSkillName);
     }
 
-    public long calculateXP(@NotNull ServerPlayerEntity player) {
+    public long calculateXP(@NotNull ServerPlayerEntity player, LevelProfile levelProfile) {
         long xp = 0;
         for (Block block : Constants.naturesGraceXp.keySet()) {
             xp += (long) (player.getStatHandler().getStat(Stats.MINED.getOrCreateStat(block)) * Constants.naturesGraceXp.get(block));
@@ -168,7 +172,7 @@ class ToughnessSkill extends Skill {
         super(Constants.toughnessSkillName);
     }
 
-    public long calculateXP(@NotNull ServerPlayerEntity player) {
+    public long calculateXP(@NotNull ServerPlayerEntity player, LevelProfile levelProfile) {
         return player.getStatHandler().getStat(Stats.CUSTOM.getOrCreateStat(Stats.DAMAGE_TAKEN)) / 100;
     }
 }
@@ -178,22 +182,23 @@ class TotalSkill extends Skill {
         super("Total");
     }
 
-    public long calculateXP(@NotNull ServerPlayerEntity player) {
+
+    public long calculateXP(@NotNull ServerPlayerEntity player, LevelProfile levelProfile) {
         long xp = 0;
-        for (Skill skill : LevelProfile.skills) {
+        for (Skill skill : levelProfile.skills) {
             xp += skill.level;
         }
         return xp;
     }
 
-    @Override
-    public void level(ServerPlayerEntity player) {
-        level = (int) calculateXP(player);
+
+    public void level(ServerPlayerEntity player, LevelProfile levelProfile) {
+        level = (int) calculateXP(player, levelProfile);
 
     }
 
     @Override
-    public void upatedEffectOnPlayer(ServerPlayerEntity player) {
+    public void updateEffectOnPlayer(@NotNull ServerPlayerEntity player) {
         RegistryEntry<StatusEffect> effect = Constants.skillEffects.get(name);
         if (level < 1) {
             player.removeStatusEffect(effect);
@@ -206,6 +211,6 @@ class TotalSkill extends Skill {
         } catch (Exception e) {
             LOGGER.error("Failed to add TotalLevel skills effect {} to player {}", effect, player.getName().getString());
 
-        };
+        }
     }
 }

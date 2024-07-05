@@ -33,9 +33,14 @@ public class RPGLevelManager {
 
     public void updatePlayers(){
         for (ServerPlayerEntity player : playerLevelManager.keySet()) {
+            updatePlayerSkills(player);
             updatePlayerLevel(player);
             updatePlayerEffects(player);
         }
+    }
+
+    private void updatePlayerSkills(ServerPlayerEntity player) {
+        playerLevelManager.get(player).updateAllSkills(player);
     }
 
     public LevelProfile getLevelProfile(ServerPlayerEntity player){
