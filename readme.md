@@ -1,7 +1,7 @@
 # RPG-Style-LevelUp
 
 A Fabric Minecraft server mod (Java / Gradle) that provides RPG-style player leveling and UI updates based on configurable skill data and experience mechanics.
-Works for Minecraft 1.21
+Works for Minecraft 1.21 and runs purely serverside, no client mod needed.
 
 ## Features
 - Per-player skill leveling system.
